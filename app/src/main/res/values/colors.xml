@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1a1a1a</color>
+    <color name="colorPrimaryDark">#060606</color>
+    <color name="colorAccent">#797A7B</color>
+    <color name="colorGrisOscuroApp">#1a1a1a</color>
+    <color name="colorAzulApp">#0049ff</color>
+    <color name="mySuperColor">#FFFFFF</color>
+    <color name="progress">#fa0202</color>
+    <color name="otrocolorGrisOscuroApp">#af1a1a1a</color>
+    <color name="ShadowApp">#961a1a1a</color>
+    <color name="color_white">#FFFFFF</color>
+</resources>

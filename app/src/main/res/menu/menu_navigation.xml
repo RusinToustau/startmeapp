@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:id="@+id/menu_profile">
+
+        <item
+            android:id="@+id/user"
+            android:title="User"
+            android:icon="@drawable/ic_person_outline_black_24dp"
+
+            />
+
+        <item
+            android:id="@+id/fav_songs"
+            android:title="Favorites Album"
+            android:icon="@drawable/ic_favorite_border_black_24dp"
+            />
+
+        <item
+            android:id="@+id/playlist"
+            android:title="Favorites Tracks"
+            android:icon="@drawable/ic_favorite_border_black_24dp"
+            />
+    </group>
+
+</menu>

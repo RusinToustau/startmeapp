@@ -1,0 +1,108 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.ftoustau.startmeapp.View.TrackView.TrackItemView">
+
+    <ImageView
+        android:id="@+id/IVportada"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/rollingportada"
+        android:scaleType="centerCrop" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/otrocolorGrisOscuroApp"/>
+
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/TrackImageView"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/rollingportada"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:id="@+id/TrackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:text="@string/song_name"
+            android:textColor="#ffffff" />
+
+
+        <LinearLayout
+            android:id="@+id/Player_ButtonContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="35dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <ImageButton
+                android:id="@+id/goHomefromTrack"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_marginTop="5dp"
+                android:background="@null"
+                android:padding="5dp"
+                android:src="@drawable/ic_view_module" />
+
+            <ImageButton
+                android:id="@+id/Btn_Previous"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="5sp"
+                android:background="@null"
+                android:padding="5dp"
+                android:src="@drawable/ic_skip_previous_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/Track_Btn_PlayPause"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="5dp"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_pause_circle_outline_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/Player_Btn_Next"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5sp"
+                android:background="@null"
+                android:padding="5dp"
+                android:src="@drawable/ic_skip_next_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/favBoton"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0.13"
+                android:background="@null"
+                android:padding="5dp"
+                android:src="@drawable/ic_favorite_border_black_24dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

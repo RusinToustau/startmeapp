@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">StartMeApp</string>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">tdOFPDon5peMm8mMgYekJSae7</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">xTRf1BuCXhk1BoQqUiyJmU0SBmHO8QmwOItBq2TuySWrUz14O9</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="band_name">Band Name</string>
+    <string name="song_name">Song Name</string>
+    <string name="album_name">Album Name</string>
+    <string name="album_title">Album Title</string>
+    <string name="album_year">Album Year</string>
+    <string name="user">Perfil</string>
+    <color name="semiWhite">#EEEEEE</color>
+</resources>
