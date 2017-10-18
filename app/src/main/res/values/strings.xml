@@ -11,4 +11,6 @@
     <string name="album_year">Album Year</string>
     <string name="user">Perfil</string>
     <color name="semiWhite">#EEEEEE</color>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

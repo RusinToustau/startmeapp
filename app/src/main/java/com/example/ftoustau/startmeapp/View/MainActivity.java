@@ -23,8 +23,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -88,8 +91,9 @@ public class MainActivity extends AppCompatActivity implements
     private Boolean serviceBound = false;
     private ArrayList<Audio> audioList;
     private MenuFragment menuFragment;
-
-    private DrawerLayout drawer;
+    private Toolbar toolbar;
+    private ActionBar actionBar;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +104,14 @@ public class MainActivity extends AppCompatActivity implements
         if (checkAndRequestPermissions()) {
             loadAudioList();
         }
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         menuFragment = new MenuFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(BlankFragment.LISTAKEY,audioList);
         menuFragment.setArguments(bundle);
         changeFragment(menuFragment, TAG_MENU_FRAGMENT, false);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -131,11 +135,29 @@ public class MainActivity extends AppCompatActivity implements
 
                 }
 
-                drawer.closeDrawers();
+                drawerLayout.closeDrawers();
 
                 return false;
             }
         });
+        uploadToolbar();
+    }
+
+    public void uploadToolbar(){
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        toolbar.setTitle(R.string.app_name);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
 
@@ -156,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(Gravity.LEFT)) {
-            drawer.closeDrawers();
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            drawerLayout.closeDrawers();
         } else {
             super.onBackPressed();
         }
