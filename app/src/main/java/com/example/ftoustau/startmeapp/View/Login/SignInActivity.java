@@ -41,7 +41,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class SignInActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SignInActivity";
     public static final Integer SIGN_IN_CODE = 1;
     int ACCOUNT_PICKER_REQ_CODE = 2;
@@ -98,9 +99,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     // Name, email address, and profile photo Url
-                    Toast.makeText(SignInActivity.this, "Bienvenido "+user.getEmail(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Bienvenido "+user.getEmail()
+                            , Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SignInActivity.this, "Para entrar debe loguearse", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignInActivity.this, "Para entrar debe loguearse"
+                            , Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -111,7 +114,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                Toast.makeText(SignInActivity.this, result.data.getUserName() + " Bienvenido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, result.data.getUserName() + " Bienvenido"
+                        , Toast.LENGTH_SHORT).show();
                 handleTwitterSession(result.data);
             }
 
@@ -217,7 +221,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     private void goMainScreen() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -317,8 +322,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void createIntentPiker(){
-        Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE},
-                false, null, null, null, null);
+        Intent intent = AccountPicker.newChooseAccountIntent(null, null
+                , new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
         startActivityForResult(intent, ACCOUNT_PICKER_REQ_CODE);
     }
 
