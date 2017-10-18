@@ -1,22 +1,25 @@
 package com.example.ftoustau.startmeapp.View.Login;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.ftoustau.startmeapp.Model.POJO.User;
 import com.example.ftoustau.startmeapp.R;
 import com.example.ftoustau.startmeapp.View.MainActivity;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,6 +32,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -39,18 +44,18 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SignInActivity";
     public static final Integer SIGN_IN_CODE = 1;
+    int ACCOUNT_PICKER_REQ_CODE = 2;
 
     private GoogleApiClient googleApiClient;
     private SignInButton signInGoogleButton;
     private TwitterLoginButton loginButton;
-
-    private EditText editEmail, editPassword;
+    private EditText tv_email, mPasswordField;
     private Button buttonSingUp, buttonSingIn;
-
     private FirebaseAuth mAuth;
-
-    ////para el login con mail
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    String email;
+    String pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,34 +69,25 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         ////MAil
         buttonSingUp = (Button) findViewById(R.id.signup_button);
         buttonSingIn = (Button) findViewById(R.id.signin_button);
-        editEmail = (EditText) findViewById(R.id.email_edittext);
-        editPassword = (EditText) findViewById(R.id.password_edittext);
+        tv_email = (EditText) findViewById(R.id.email_edittext);
+        mPasswordField = (EditText) findViewById(R.id.password_edittext);
 
         buttonSingUp.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View v) {
-                String emailInicia = editEmail.getText().toString();
-                String passInicia = editPassword.getText().toString();
-                if (emailInicia.length() > 0 && passInicia.length() > 0) {
-                    altaUser(emailInicia, passInicia);
-                }else {
-                    Toast.makeText(SignInActivity.this, "Introduzca todos los datos", Toast.LENGTH_SHORT).show();
-                }
+               // name = tv_email.getText().toString();
+                email = tv_email.getText().toString();
+                pass = mPasswordField.getText().toString();
+                createAccount(email, pass);
             }
         });
 
         buttonSingIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String emailInicia = editEmail.getText().toString();
-                String passInicia = editPassword.getText().toString();
-                if (emailInicia.length() > 0 && passInicia.length() > 0) {
-                    iniciaUser(emailInicia, passInicia);
-                }else {
-                    Toast.makeText(SignInActivity.this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
-                }
+                email = tv_email.getText().toString();
+                pass = mPasswordField.getText().toString();
+                signIn(email, pass);
             }
         });
 
@@ -166,14 +162,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private void goToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        finish();
     }
 
-    private void goToStart(){
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     private void handleTwitterSession(TwitterSession session) {
 
@@ -244,6 +234,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -254,40 +245,108 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 });
     }
 
+    private void createAccount(String email, String password) {
 
-    public void altaUser(final String email, final String pass) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
+        Log.d(TAG, "createAccount:" + email);
+        if (!validateForm()) {
+            return;
+        }
 
-                    goToMainActivity();
-                } else {
-                    goToStart();
-                    Log.e("SESION", task.getException().getMessage()+"No se pudo dar de alta");
-                    Toast.makeText(SignInActivity.this, "Problema de autenticación", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                            goToMainActivity();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(SignInActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    }
+                });
     }
 
-    public void iniciaUser(String email, String pass) {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                goToMainActivity();
-                //Toast.makeText(SignInActivity.this,FirebaseAuth.getInstance().getCurrentUser(),Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                goToStart();
-                Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_SHORT).show();
-            }
-        });
+    private boolean validateForm() {
+        boolean valid = true;
+
+        if (TextUtils.isEmpty(email)) {
+            createIntentPiker();
+            valid = false;
+        }
+
+        String name = tv_email.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            tv_email.setError("Required.");
+            Toast.makeText(this,"Debes completar el email",Toast.LENGTH_SHORT).show();
+            valid = false;
+        } else {
+            mPasswordField.setError(null);
+        }
+
+        String password = mPasswordField.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            mPasswordField.setError("Required.");
+            Toast.makeText(this,"Debes definir una contraseña",Toast.LENGTH_SHORT).show();
+            valid = false;
+        } else {
+            mPasswordField.setError(null);
+        }
+
+        return valid;
     }
 
+    private void updateUI(FirebaseUser user) {
+        if (user!=null){
+            User myuser = new User();
+            myuser.setEmail(user.getEmail());
+            //myuser.setFullname(name);
+            myuser.setId(user.getUid());
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference();
+            myRef.child("Users").child(user.getUid()).setValue(myuser);
+        } else {
+            Toast.makeText(this,"user fail",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void createIntentPiker(){
+        Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE},
+                false, null, null, null, null);
+        startActivityForResult(intent, ACCOUNT_PICKER_REQ_CODE);
+    }
+
+    private void signIn(String email, String password) {
+        Log.d(TAG, "signIn:" + email);
+        if (!validateForm()) {
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            goToMainActivity();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            String message = task.getException().getMessage();
+                            Toast.makeText(SignInActivity.this, message,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
 
 }
 
