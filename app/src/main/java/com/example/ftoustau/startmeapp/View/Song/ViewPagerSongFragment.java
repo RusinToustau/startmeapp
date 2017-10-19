@@ -28,7 +28,8 @@ public class ViewPagerSongFragment extends Fragment {
     private SongAdapter songAdapter;
     private MediaPlayer mediaPlayer;
 
-    public static ViewPagerSongFragment createViewPagerSongFragment(ArrayList<Song> list, Integer position){
+    public static ViewPagerSongFragment createViewPagerSongFragment(ArrayList<Song> list
+            , Integer position){
         ViewPagerSongFragment viewPagerSongFragment = new ViewPagerSongFragment();
 
         Bundle bundle = new Bundle();
@@ -61,10 +62,11 @@ public class ViewPagerSongFragment extends Fragment {
         viewPager.setClipToPadding(false);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset
+                    , int positionOffsetPixels) {
                 Song actualSong = ((SongAdapter)viewPager.getAdapter()).getSongItem(position);
 
-                //Configuracione de release y como se va a comportar el reproductor si ya se encuentra en play
+       //Configuracion de release y como se va a comportar el reproductor si ya se encuentra en play
                 MyMediaPlayer.playResurce(view.getContext(),actualSong);
             }
 

@@ -27,13 +27,14 @@ public class AlbumFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
-        final ArrayList<Song> arrayList = (ArrayList<Song>) bundle.getSerializable(SONG_KEY);/*reemplazar*/
+        final ArrayList<Song> arrayList = (ArrayList<Song>) bundle.getSerializable(SONG_KEY);
 
         View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         recyclerViewListSongs = (RecyclerView) view.findViewById(R.id.ReciclerViewListSongs);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext()
+                ,LinearLayoutManager.VERTICAL,false);
         recyclerViewListSongs.setLayoutManager(layoutManager);
 
         View.OnClickListener listener = new View.OnClickListener() {

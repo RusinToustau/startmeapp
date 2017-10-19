@@ -5,6 +5,8 @@ import android.media.MediaPlayer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 
 import com.example.ftoustau.startmeapp.Controller.MyMediaPlayer;
@@ -17,7 +19,8 @@ import com.example.ftoustau.startmeapp.View.Song.SongAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ViewTrackActivity extends AppCompatActivity implements TrackItemView.Player,TrackItemView.Notify{
+public class ViewTrackActivity extends AppCompatActivity implements TrackItemView.Player
+        ,TrackItemView.Notify{
     public static final String KEYLIST = "list";
     public static final String KEYPOSITION = "position";
     private MediaPlayer mediaPlayer;
@@ -25,6 +28,7 @@ public class ViewTrackActivity extends AppCompatActivity implements TrackItemVie
     private ArrayList<Track> tracks;
     private ViewPager viewPager;
     private Integer position;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,12 @@ public class ViewTrackActivity extends AppCompatActivity implements TrackItemVie
         setContentView(R.layout.activity_view_track);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         tracks = (ArrayList<Track>) bundle.getSerializable(KEYLIST);
         position = bundle.getInt(KEYPOSITION);
@@ -48,7 +58,8 @@ public class ViewTrackActivity extends AppCompatActivity implements TrackItemVie
 
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset
+                    , int positionOffsetPixels){
                 Track actualTrack = adapter.getTrackItem(position);
                 MyMediaPlayer.setTracks(tracks);
                 MyMediaPlayer.setPosition(position);
@@ -84,5 +95,16 @@ public class ViewTrackActivity extends AppCompatActivity implements TrackItemVie
     public void returnHome() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(this,MainActivity.class));
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

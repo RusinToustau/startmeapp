@@ -95,10 +95,10 @@ public class TrackListFragment extends Fragment {
 
         fabNativeShare = (FloatingActionButton) view.findViewById(R.id.accion_share);
         fabNativeShare.setOnClickListener(onClickListener);
-//        fabPlayAll = (FloatingActionButton) view.findViewById(R.id.accion_favorito);
 
         // Find the Collapse ToolBar component
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.colapseToolbar);
+        final CollapsingToolbarLayout collapsingToolbarLayout =
+                (CollapsingToolbarLayout) view.findViewById(R.id.colapseToolbar);
         // Set Title
         collapsingToolbarLayout.setTitle(title);
         // Set Title Expanded Color
@@ -109,7 +109,8 @@ public class TrackListFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewTrackList);
         context = getContext();
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL
+                , false));
 
         arrayList = new ArrayList<>();
 
@@ -137,7 +138,7 @@ public class TrackListFragment extends Fragment {
                 Integer position = recyclerView.getChildAdapterPosition(v);
                 notify = (Notify) getActivity();
                 arrayList = (ArrayList<Track>) adapter.getLista();
-                notify.goToViewTrackActivity(arrayList,position);/*cambiar array por el obtenido del adapter*/
+                notify.goToViewTrackActivity(arrayList,position);
             }
         };
         adapter.setListener(listener);
@@ -155,11 +156,13 @@ public class TrackListFragment extends Fragment {
                     if(!daoFavoriteAlbumDataBase.estaEnLADB(myAlbum.getId())){
                         fabFavoriteAlbum.setImageResource(R.drawable.ic_favorite_24dp);
                         daoFavoriteAlbumDataBase.addAlbum(myAlbum);
-                        Toast.makeText(context,"Se agrego de la lista de favoritos",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Se agrego de la lista de favoritos"
+                                ,Toast.LENGTH_SHORT).show();
                     }else {
                         fabFavoriteAlbum.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                         daoFavoriteAlbumDataBase.deleteAlbum(myAlbum.getId());
-                        Toast.makeText(context,"Se elimino de la lista de favoritos",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Se elimino de la lista de favoritos"
+                                ,Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -175,14 +178,13 @@ public class TrackListFragment extends Fragment {
                     share.putExtra(Intent.EXTRA_TEXT, "Les comparto alto tema desde StartmeApp");
                     //Hacemos un start para que comparta el contenido.
                     startActivity(Intent.createChooser(share, "https://www.digitalhouse.com/"));
-
                     break;
 
                 case R.id.playAllTracks:
                     notify = (Notify) getActivity();
                     notify.goToViewTrackActivity(arrayList,0);
-
                     break;
+
             }
         }
     };

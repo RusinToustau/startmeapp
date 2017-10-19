@@ -48,7 +48,8 @@ public class ViewPagerCustomFragment extends Fragment {
 
         Bundle bundle = getArguments();
         genre_id = bundle.getInt(ID_KEY);
-        genre_name = bundle.getString(GENRENAME_KEY);genre_picture_medium = bundle.getString(GENREPICTURE_KEY);
+        genre_name = bundle.getString(GENRENAME_KEY);
+        genre_picture_medium = bundle.getString(GENREPICTURE_KEY);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
 

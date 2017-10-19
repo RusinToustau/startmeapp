@@ -51,22 +51,12 @@
             android:orientation="vertical"/>
     </android.support.v4.widget.NestedScrollView>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:layout_anchor="@id/appbar"-->
-        <!--android:layout_margin="16dp"-->
-        <!--app:layout_anchorGravity="bottom|right|end">-->
-    <!--</android.support.design.widget.FloatingActionButton>-->
-
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/menu_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/appbar"
-        android:layout_margin="16dp"
-        app:layout_anchorGravity="end|right|bottom"
+        android:layout_margin="20dp"
+        android:layout_gravity="bottom|end"
         app:fab_addButtonSize="normal">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
