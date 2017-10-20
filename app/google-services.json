@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:570685199860:android:40a1ac7fcc05ad01",
         "android_client_info": {
-          "package_name": "com.example.ftoustau.startmeapp"
+          "package_name": "apps.kinmniekan_code.startmeapp"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "570685199860-5btau2mnon2r8el8ojqro3hp50ebgmte.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ftoustau.startmeapp",
+            "package_name": "apps.kinmniekan_code.startmeapp",
             "certificate_hash": "e2ec07b823122f4134a500c7f14c82db5f9298db"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "570685199860-5qi4vp1mfdu4vttq9qqoghgau9p5j3tg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ftoustau.startmeapp",
+            "package_name": "apps.kinmniekan_code.startmeapp",
             "certificate_hash": "7d76848d9d02e94757fc75c838bd0e6cd242a1db"
           }
         },
@@ -34,7 +34,7 @@
           "client_id": "570685199860-4gln9husvp9eovb909u8j6surmd7qkvd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ftoustau.startmeapp",
+            "package_name": "apps.kinmniekan_code.startmeapp",
             "certificate_hash": "112ba27926e143376e2da3aa82a5441e197854a5"
           }
         },
