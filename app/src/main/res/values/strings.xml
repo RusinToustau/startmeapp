@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">StartMeApp</string>
-    <string name="com.twitter.sdk.android.CONSUMER_KEY">tdOFPDon5peMm8mMgYekJSae7</string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET">xTRf1BuCXhk1BoQqUiyJmU0SBmHO8QmwOItBq2TuySWrUz14O9</string>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">hS9oeLpeVbkazVXAK2vfVXW5X</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">xAI81HB7RDsns3nPbYwqJUkfgoGnf9GTzqijTuIBYKIlwWuSjr</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="band_name">Band Name</string>

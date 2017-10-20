@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements
         PlayerFragment.Notify,
         GenreFragment.NotifyGenre{
 
-    public static final String ACTION_BROADCAST_PLAY_NEW_AUDIO = "com.example.ftoustau.startmeapp.PlayNewAudio";
-
     private Toolbar toolbar;
     private ActionBar actionBar;
     private DrawerLayout drawerLayout;
@@ -68,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements
                         startActivity(new Intent(MainActivity.this, FavoritesTracksActivity.class));
                         break;
                 }
-
                 drawerLayout.closeDrawers();
-
                 return false;
             }
         });
