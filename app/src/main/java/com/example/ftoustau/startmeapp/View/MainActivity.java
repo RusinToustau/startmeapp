@@ -18,7 +18,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -39,25 +38,17 @@ import com.example.ftoustau.startmeapp.Model.POJO.AlbumPackage.Album;
 import com.example.ftoustau.startmeapp.Model.POJO.Audio;
 import com.example.ftoustau.startmeapp.Model.POJO.GenrePackage.Genre;
 import com.example.ftoustau.startmeapp.Model.POJO.TrackPackage.Track;
-import com.example.ftoustau.startmeapp.Model.Song;
 import com.example.ftoustau.startmeapp.R;
 import com.example.ftoustau.startmeapp.View.AudioInterno.BlankFragment;
 import com.example.ftoustau.startmeapp.View.CustomViewPager.ChartsFragment;
 import com.example.ftoustau.startmeapp.View.CustomViewPager.ViewPagerCustomFragment;
 import com.example.ftoustau.startmeapp.View.GenreView.GenreFragment;
-import com.example.ftoustau.startmeapp.View.ListSongs.AlbumFragment;
-import com.example.ftoustau.startmeapp.View.Login.SignInActivity;
-import com.example.ftoustau.startmeapp.View.MainMenu.MenuFragment;
-import com.example.ftoustau.startmeapp.View.NavegationMenu.FavoritosFragment;
-import com.example.ftoustau.startmeapp.View.NavegationMenu.FavoriteTracksFragment;
-import com.example.ftoustau.startmeapp.View.NavegationMenu.UserFragment;
+import com.example.ftoustau.startmeapp.View.NavegationMenu.FavoritesAlbumsActivity;
+import com.example.ftoustau.startmeapp.View.NavegationMenu.FavoritesTracksActivity;
+import com.example.ftoustau.startmeapp.View.NavegationMenu.ProfileActivity;
 import com.example.ftoustau.startmeapp.View.Player.PlayerFragment;
-import com.example.ftoustau.startmeapp.View.Song.ItemSongFragment;
-import com.example.ftoustau.startmeapp.View.Song.ViewPagerSongFragment;
 import com.example.ftoustau.startmeapp.View.TrackListView.TrackListFragment;
 import com.example.ftoustau.startmeapp.View.TrackView.ViewTrackActivity;
-import com.google.firebase.auth.FirebaseAuth;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,22 +57,10 @@ import java.util.Map;
 import static android.os.Build.VERSION.SDK_INT;
 
 public class MainActivity extends AppCompatActivity implements
-        UserFragment.Notify,
-        AlbumFragment.Notify,
         ChartsFragment.Notify,
-        TrackListFragment.Notify,
-        FavoritosFragment.Notify,
-        ItemSongFragment.Notify,
-        FavoriteTracksFragment.Notify,
         PlayerFragment.Notify,
         BlankFragment.Notify,
         GenreFragment.NotifyGenre{
-
-    private static final String TAG_MENU_FRAGMENT = "menuFragment";
-    private static final String TAG_USER_FRAGMENT = "userFragment";
-    private static final String TAG_FAVS_FRAGMENT = "favsFragment";
-    private static final String TAG_PLAYLIST_FRAGMENT = "playListFragment";
-    private static final String TAG_VIEWPAGER_CUSTOM_FRAGMENT = "viewPagerCustomFragment";
 
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     public static final String ACTION_BROADCAST_PLAY_NEW_AUDIO = "com.example.ftoustau.startmeapp.PlayNewAudio";
@@ -90,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements
     private MediaPlayerService player;
     private Boolean serviceBound = false;
     private ArrayList<Audio> audioList;
-    private MenuFragment menuFragment;
     private Toolbar toolbar;
     private ActionBar actionBar;
     private DrawerLayout drawerLayout;
@@ -105,11 +83,8 @@ public class MainActivity extends AppCompatActivity implements
             loadAudioList();
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        menuFragment = new MenuFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(BlankFragment.LISTAKEY,audioList);
-        menuFragment.setArguments(bundle);
-        changeFragment(menuFragment, TAG_MENU_FRAGMENT, false);
+
+        uploadFragments();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -119,20 +94,16 @@ public class MainActivity extends AppCompatActivity implements
 
                 switch (item.getItemId()) {
                     case R.id.user:
-                        UserFragment userFragment = new UserFragment();
-                        changeFragment(userFragment, TAG_USER_FRAGMENT, false);
+                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                         break;
 
                     case R.id.fav_songs:
-                        FavoritosFragment favoritosFragment = new FavoritosFragment();
-                        changeFragment(favoritosFragment, TAG_FAVS_FRAGMENT, false);
+                        startActivity(new Intent(MainActivity.this, FavoritesAlbumsActivity.class));
                         break;
 
-                    case R.id.playlist:
-                        FavoriteTracksFragment favoriteTracksFragment = new FavoriteTracksFragment();
-                        changeFragment(favoriteTracksFragment, TAG_PLAYLIST_FRAGMENT, false);
+                    case R.id.playlist:;
+                        startActivity(new Intent(MainActivity.this, FavoritesTracksActivity.class));
                         break;
-
                 }
 
                 drawerLayout.closeDrawers();
@@ -141,6 +112,16 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         uploadToolbar();
+    }
+
+    public void uploadFragments(){
+        GenreFragment genreFragment = new GenreFragment();
+        PlayerFragment playerFragment = new PlayerFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.contentElse,genreFragment);
+        fragmentTransaction.replace(R.id.contentPlayer,playerFragment);
+        fragmentTransaction.commit();
     }
 
     public void uploadToolbar(){
@@ -161,21 +142,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    public void changeFragment(Fragment fragment, String tag, Boolean forceAddToBackstack){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment currentFragment = fragmentManager.findFragmentById(R.id.contentElse);
-
-        if (currentFragment == null || currentFragment.getTag() == null || !currentFragment.getTag().equals(tag)) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.contentElse, fragment, tag);
-            if (forceAddToBackstack ||
-                    (currentFragment != null && currentFragment.getTag() != null && currentFragment.getTag().equals(TAG_MENU_FRAGMENT))) {
-                fragmentTransaction.addToBackStack(null);
-            }
-            fragmentTransaction.commit();
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
@@ -186,25 +152,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void goViewPagerSong(ArrayList<Song> songs, Integer position) {
-        changeFragment(ViewPagerSongFragment.createViewPagerSongFragment(songs, position), null, true);
-    }
-
-
-    @Override
     public void toBuildTheCustomerStyle(Genre genre) {
-        ViewPagerCustomFragment fragment = new ViewPagerCustomFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ViewPagerCustomFragment.ID_KEY,genre.getId());
-        fragment.setArguments(bundle);
-
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.contentElse,fragment, TAG_VIEWPAGER_CUSTOM_FRAGMENT);
-        ft.addToBackStack(null);
-        ft.commit();
+        Intent intent = new Intent(MainActivity.this,SelectActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
-
 
     @Override
     public void goTrackLsit(Album album) {
@@ -219,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements
         bundle.putString(TrackListFragment.COVERBIG_KEY, album.getCover_big());
         bundle.putString(TrackListFragment.COVERXL_KEY, album.getCover_xl());
 
-
         trackListFragment.setArguments(bundle);
         trackListFragment.setArguments(bundle);
         FragmentManager fm = getSupportFragmentManager();
@@ -230,9 +183,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(MainActivity.this,SignInActivity.class);
+    public void returnToViewTrack(ArrayList<Track> tracks, Integer position) {
+        Intent intent = new Intent(this,ViewTrackActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(ViewTrackActivity.KEYPOSITION,position);
+        bundle.putSerializable(ViewTrackActivity.KEYLIST,tracks);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -245,10 +201,11 @@ public class MainActivity extends AppCompatActivity implements
         if (SDK_INT >= Build.VERSION_CODES.M) {
 
             //Tengo permiso de ver el estado del telefono?
-            Integer permissionReadPhoneState = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+            Integer permissionReadPhoneState = ContextCompat.checkSelfPermission(this
+                    , Manifest.permission.READ_PHONE_STATE);
             //Tengo permiso de leer el almacenamiento?
-            Integer permissionStorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-
+            Integer permissionStorage = ContextCompat.checkSelfPermission(this
+                    , Manifest.permission.READ_EXTERNAL_STORAGE);
 
             List<String> listPermissionsNeeded = new ArrayList<>();
 
@@ -264,8 +221,10 @@ public class MainActivity extends AppCompatActivity implements
                 // Tengo que pedir permisos
 
                 // Convierto el arrayList en una lista estatica
-                String[] staticListPermissionNeed = listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]);
-                ActivityCompat.requestPermissions(this, staticListPermissionNeed, REQUEST_ID_MULTIPLE_PERMISSIONS);
+                String[] staticListPermissionNeed = listPermissionsNeeded.toArray
+                        (new String[listPermissionsNeeded.size()]);
+                ActivityCompat.requestPermissions(this, staticListPermissionNeed
+                        , REQUEST_ID_MULTIPLE_PERMISSIONS);
                 return false;
             } else {
                 // Esta ok, tengo todos los permisos
@@ -288,8 +247,10 @@ public class MainActivity extends AppCompatActivity implements
 
                 Map<String, Integer> perms = new HashMap<>();
                 // Initialize the map with both permissions
-                perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.READ_PHONE_STATE
+                        , PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE
+                        , PackageManager.PERMISSION_GRANTED);
                 // Fill with actual results from user
                 if (grantResults.length > 0) {
 
@@ -298,20 +259,28 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     // Check for both permissions
 
-                    if (perms.get(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
-                            && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                            ) {
+                    if (perms.get(Manifest.permission.READ_PHONE_STATE)
+                            == PackageManager.PERMISSION_GRANTED
+                            && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
                         Log.d(TAG, "Phone state and storage permissions granted");
                         // process the normal flow
                         //else any one or both the permissions are not granted
                         loadAudioList();
                     } else {
                         Log.d(TAG, "Some permissions are not granted ask again ");
-                        //permission is denied (this is the first time, when "never ask again" is not checked) so ask again explaining the usage of permission
-//                      //shouldShowRequestPermissionRationale will return true
-                        //show the dialog or snackbar saying its necessary and try again otherwise proceed with setup.
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) ||
-                                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+                        /*
+                        permission is denied (this is the first time,
+                        when "never ask again" is not checked) so ask again explaining
+                        the usage of permission
+                        shouldShowRequestPermissionRationale will return true
+                        show the dialog or snackbar saying its necessary and try again otherwise
+                        proceed with setup.
+                        */
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this
+                                , Manifest.permission.READ_EXTERNAL_STORAGE) ||
+                                ActivityCompat.shouldShowRequestPermissionRationale(this
+                                        , Manifest.permission.READ_PHONE_STATE)) {
                             showDialogOK("Phone state and storage permissions required for this app",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -321,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements
                                                     checkAndRequestPermissions();
                                                     break;
                                                 case DialogInterface.BUTTON_NEGATIVE:
-                                                    // proceed with logic by disabling the related features or quit the app.
+                            // proceed with logic by disabling the related features or quit the app.
                                                     break;
                                             }
                                         }
@@ -330,7 +299,8 @@ public class MainActivity extends AppCompatActivity implements
                         //permission is denied (and never ask again is  checked)
                         //shouldShowRequestPermissionRationale will return false
                         else {
-                            Toast.makeText(this, "Go to settings and enable permissions", Toast.LENGTH_LONG)
+                            Toast.makeText(this, "Go to settings and enable permissions"
+                                    , Toast.LENGTH_LONG)
                                     .show();
                             //proceed with logic by disabling the related features or quit the app.
                         }
@@ -348,11 +318,6 @@ public class MainActivity extends AppCompatActivity implements
                 .setNegativeButton("Cancel", okListener)
                 .create()
                 .show();
-    }
-
-
-    private void initRecyclerView() {
-
     }
 
 
@@ -410,7 +375,6 @@ public class MainActivity extends AppCompatActivity implements
         cursor.close();
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -442,35 +406,4 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void goToViewTrackActivity(ArrayList<Track> list, Integer position) {
-        Intent intent = new Intent(this,ViewTrackActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt(ViewTrackActivity.KEYPOSITION,position);
-        bundle.putSerializable(ViewTrackActivity.KEYLIST,list);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-
-    @Override
-    public void toViewAlbum(Album album) {
-        goTrackLsit(album);
-    }
-
-    @Override
-    public void goHome() {
-        changeFragment(menuFragment, TAG_MENU_FRAGMENT, false);
-    }
-
-
-    @Override
-    public void next(ArrayList<Track> list, Integer position) {
-        goToViewTrackActivity(list,position);
-    }
-
-    @Override
-    public void returnToViewTrack(ArrayList<Track> tracks, Integer position) {
-        goToViewTrackActivity(tracks,position);
-    }
 }

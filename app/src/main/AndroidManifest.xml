@@ -30,6 +30,10 @@
         <activity
             android:name=".View.TrackView.ViewTrackActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".View.NavegationMenu.FavoritesTracksActivity" />
+        <activity android:name=".View.NavegationMenu.FavoritesAlbumsActivity" />
+        <activity android:name=".View.NavegationMenu.ProfileActivity" />
+        <activity android:name=".View.SelectActivity"></activity>
     </application>
 
 </manifest>

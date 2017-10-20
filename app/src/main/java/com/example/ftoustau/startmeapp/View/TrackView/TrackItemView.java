@@ -18,7 +18,6 @@ import com.example.ftoustau.startmeapp.Controller.MyMediaPlayer;
 import com.example.ftoustau.startmeapp.Model.DAO.DAOFavTracks.DAOTracksFavoritos;
 import com.example.ftoustau.startmeapp.Model.POJO.TrackPackage.Track;
 import com.example.ftoustau.startmeapp.R;
-import com.example.ftoustau.startmeapp.View.Song.ItemSongFragment;
 import com.squareup.picasso.Picasso;
 
 import info.abdolahi.CircularMusicProgressBar;

@@ -14,7 +14,6 @@ import com.example.ftoustau.startmeapp.Model.POJO.TrackPackage.Track;
 import com.example.ftoustau.startmeapp.Model.Song;
 import com.example.ftoustau.startmeapp.R;
 import com.example.ftoustau.startmeapp.View.MainActivity;
-import com.example.ftoustau.startmeapp.View.Song.SongAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
